@@ -182,10 +182,60 @@ def evaluate_composition_classification(model):
     return acc
 
 
+# SESUDAH (Kode yang sudah diperbaiki)
 if __name__ == '__main__':
-    weight_file = "./pretrained_model/best-FLMS_iou.pth"
+    # 1. Definisikan device terlebih dahulu
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    # 2. Ganti nama file ini agar SESUAI DENGAN NAMA FILE YANG ANDA UNDUH
+    #    Kemungkinan besar namanya 'best_cropping_model.pth'
+    weight_file = "./pretrained_model/best-FLMS_iou.pth" 
+    
+    # Pastikan file ada sebelum melanjutkan
+    if not os.path.exists(weight_file):
+        raise FileNotFoundError(f"File model tidak ditemukan di: {weight_file}. Periksa kembali nama filenya di folder 'pretrained_model'!")
+
     model = CACNet(loadweights=False)
-    model.load_state_dict(torch.load(weight_file))
+    
+    # 3. Tambahkan map_location saat memuat model
+    print(f"Memuat model dari {weight_file} ke perangkat {device}...")
+    model.load_state_dict(torch.load(weight_file, map_location=device))
+    
     model = model.to(device).eval()
+    
+    print("\nMemulai evaluasi pada dataset FCDB...")
     evaluate_on_FCDB_and_FLMS(model, dataset='FCDB', save_results=True)
+    
+    print("\nMemulai evaluasi pada dataset FLMS...")
     evaluate_on_FCDB_and_FLMS(model, dataset='FLMS', save_results=True)
+    
+    print("\nEvaluasi selesai.")
+
+    # =================================================================
+    # BLOK KODE BARU UNTUK EVALUASI KLASIFIKASI - TAMBAHKAN INI
+    # =================================================================
+    print("\n\nMemulai evaluasi pada Klasifikasi Komposisi...")
+
+    # Kita butuh model yang berbeda, yang dilatih khusus untuk klasifikasi
+    # Perhatikan kita menggunakan ComClassifier, bukan CACNet, sesuai desain training-nya
+    from CACNet import ComClassifier 
+
+    # Definisikan nama file dan pastikan ada
+    cls_weight_file = "./pretrained_model/best-acc.pth"
+    if not os.path.exists(cls_weight_file):
+        print(f"File model klasifikasi tidak ditemukan di: {cls_weight_file}. Melewati evaluasi klasifikasi.")
+    else:
+        # Buat instance model klasifikasi (bukan model cropping)
+        cls_model = ComClassifier(loadweights=False)
+
+        # Muat bobot model dengan map_location yang sama
+        print(f"Memuat model dari {cls_weight_file} ke perangkat {device}...")
+        cls_model.load_state_dict(torch.load(cls_weight_file, map_location=device))
+        
+        cls_model = cls_model.to(device).eval()
+
+        # Panggil fungsi evaluasi klasifikasi yang sudah ada di file ini
+        evaluate_composition_classification(cls_model)
+    # =================================================================
+    # AKHIR BLOK KODE BARU
+    # =================================================================

@@ -1,7 +1,7 @@
 import os
 
 class Config:
-    data_root = '/workspace/aesthetic_cropping/dataset/'
+    data_root = './datasets'
     predefined_pkl = os.path.join(data_root, 'pdefined_anchors.pkl') # download from https://github.com/luwr1022/listwise-view-ranking/blob/master/pdefined_anchors.pkl
     FCDB_dir = os.path.join(data_root, 'FCDB')
     FLMS_dir = os.path.join(data_root, 'FLMS')

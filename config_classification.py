@@ -1,7 +1,10 @@
 import os
 
 class Config:
-    KUPCP_dir = '/workspace/dataset/KU_PCP'
+    # Tambahkan path ke folder datasets
+    data_root = './datasets' 
+    # Gunakan os.path.join untuk menggabungkan path secara benar
+    KUPCP_dir = os.path.join(data_root, 'KU_PCP')
 
     image_size = (224,224)
     data_augmentation = True

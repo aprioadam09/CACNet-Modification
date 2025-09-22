@@ -1,1 +1,34 @@
+# Lingkungan Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*env/
+*venv/
+.env
+
+# Dataset - JANGAN PERNAH PUSH DATASET
+datasets/
+
+# Hasil Eksperimen, Log, dan Model Tersimpan
+experiments/
+results/
+
+# File spesifik sistem operasi
+.DS_Store
+Thumbs.db
+
+# File spesifik IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# File yang kita buat untuk pengujian
+test_model.py
+
 pretrained_model/
+
+# Output Tree
+tree_cacnet_pytorch.txt
+tree_cacnet_pytorch_simplified.txt

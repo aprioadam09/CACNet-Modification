@@ -92,6 +92,6 @@ if __name__ == '__main__':
     args = parse_arguments()
     device = torch.device(f'cuda:{args.gpu}' if torch.cuda.is_available() else 'cpu') 
     model  = CACNet(loadweights=False)
-    model.load_state_dict(torch.load(args.weight))
+    model.load_state_dict(torch.load(args.weight, map_location=device))
     model = model.to(device).eval()
     evaluate_on_images(model, args.input, args.output)
